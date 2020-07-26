@@ -2,6 +2,9 @@ const canvas = document.getElementById("jsCanvas");
 const colors = document.getElementsByClassName("jsColor");
 const range = document.getElementById("jsRange");
 const fillandPaintBtn = document.getElementById("jsFillBtn");
+const saveBtn = document.getElementById("jsSaveBtn");
+const body = document.getElementById("body");
+const resetBtn = document.getElementById("jsResetBtn");
 
 const DEFAULT_COLOR = "black";
 const CANVAS_SIZE = 550;
@@ -13,6 +16,9 @@ let filling = false;
 
 canvas.width = CANVAS_SIZE;
 canvas.height = CANVAS_SIZE;
+
+ctx.fillStyle = "white";
+ctx.fillRect(0, 0, CANVAS_SIZE, CANVAS_SIZE);
 
 ctx.strokeStyle = DEFAULT_COLOR;
 ctx.lineWidth = 2.5;
@@ -86,14 +92,35 @@ function handleCanvasClick() {
   }
 }
 
+function handleCmCLick(event) {
+  event.preventDefault();
+}
+
+function handleSaveBtnClick(event) {
+  var dataUrl = canvas.toDataURL("image/png");
+  const link = document.createElement("a");
+  link.href = dataUrl;
+  link.download = "Your Painting";
+  document.body.appendChild(link);
+  link.click();
+}
+
+function handleResetBtnClick() {
+  ctx.fillStyle = "white";
+  ctx.fillRect(0, 0, CANVAS_SIZE, CANVAS_SIZE);
+}
+
 if (canvas) {
   canvas.addEventListener("mousemove", onMouseMove);
   canvas.addEventListener("mousedown", onMouseDown);
   canvas.addEventListener("mouseup", onMouseUp);
   canvas.addEventListener("mouseleave", stopPainting);
+  canvas.addEventListener("click", handleCanvasClick);
+  canvas.addEventListener("contextmenu", handleCmCLick);
   range.addEventListener("input", handleRangeValue);
   fillandPaintBtn.addEventListener("click", handleFirstBtnClick);
-  canvas.addEventListener("click", handleCanvasClick);
+  saveBtn.addEventListener("click", handleSaveBtnClick);
+  resetBtn.addEventListener("click", handleResetBtnClick);
 }
 
 Array.from(colors).forEach((color) => {
